@@ -2,7 +2,8 @@
 
 <p align="center"> 
   <img src="screenshot/logo.png" alt="Screenshot 1" width="5%" />
-  </p>
+  <h1 align="center">Notes</h1>
+</p>
 A simple notes app built using Flutter, inspired by [Notes](https://github.com/ostoaleonardo/notes).
 
 ---
