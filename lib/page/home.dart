@@ -94,7 +94,9 @@ class Home extends GetView<MainController> {
                       ActionChip.elevated(
                         label: const Text("Add Category"),
                         avatar: const Icon(Icons.add),
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed("/categories");
+                        },
                       )
                   ],
                 ),
