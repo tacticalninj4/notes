@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notes/page/categories.dart';
 import 'package:notes/page/home.dart';
@@ -10,7 +9,6 @@ import 'package:notes/service/notes_service.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
   Get.put(NotesService(), permanent: true);
 
   runApp(const MyApp());

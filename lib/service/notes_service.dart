@@ -1,70 +1,41 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:localstore/localstore.dart';
 import 'package:notes/model/category.dart';
 import 'package:notes/model/notes.dart';
 
 class NotesService extends GetxService {
-  Future<int> addCategory(Category category) async {
-    final box = GetStorage("categories");
-    await box.initStorage;
-
-    int keysLength = box.getKeys().length ?? 0;
-    await box.write(category.id, category.toJson());
-    return keysLength;
+  final db = Localstore.instance;
+  Future addCategory(Category category) async {
+    db.collection("categories").doc(category.id).set(category.toJson());
   }
 
   Future<List<Category>> getCategories() async {
-    final box = GetStorage("categories");
-    await box.initStorage;
-    List<Category> categories = [];
-    final allKeys = box.getKeys();
-
-    if (allKeys == null) return [];
-    for (var key in allKeys) {
-      categories.add(Category.fromJson(box.read(key)));
-    }
-
-    return categories;
+    final categories = await db.collection("categories").get();
+    if (categories == null) return [];
+    return categories.entries.map((e) => Category.fromJson(e.value)).toList();
   }
 
   Future createNote(FullNotes note) async {
-    final box = GetStorage("notes");
-    await box.initStorage;
-
-    await box.write(note.id, note.toMap());
+    db.collection("notes").doc(note.id).set(note.toMap());
   }
 
   Future updateNote(FullNotes note) async {
-    final box = GetStorage("notes");
-    await box.initStorage;
-
-    await box.remove(note.id);
-
-    await box.write(note.id, note.toMap());
+    db.collection("notes").doc(note.id).set(note.toMap());
   }
 
   Future<List<FullNotes>> getAllNotes() async {
-    final box = GetStorage("notes");
-    await box.initStorage;
-    List<FullNotes> notes = [];
-    final allKeys = box.getKeys();
-
-    for (var note in allKeys) {
-      notes.add(FullNotes.fromMap(box.read(note)));
-    }
-
-    return notes;
+    final notes = await db.collection("notes").get();
+    if (notes == null) return [];
+    return notes.entries
+        .map((e) => FullNotes.fromMap(e.value as Map<String, dynamic>))
+        .toList();
   }
 
   Future deleteNote(String key) async {
-    final box = GetStorage("notes");
-    await box.initStorage;
-    await box.remove(key);
+    db.collection("notes").doc(key).delete();
   }
 
   Future deleteCategory(String key) async {
-    final box = GetStorage("categories");
-    await box.initStorage;
-    await box.remove(key);
+    db.collection("categories").doc(key).delete();
   }
 }
